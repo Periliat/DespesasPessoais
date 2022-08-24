@@ -1,7 +1,5 @@
 import 'dart:math';
 
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/widgets.dart';
 
 import '../models/transacoes.dart';
@@ -50,8 +48,8 @@ class _TransactionUserState extends State<TransactionUser> {
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
+        TransactionForm(_addTransaction),
         TransactionsList(_transactions),
-        TransactionForm(),
       ],
     );
   }
