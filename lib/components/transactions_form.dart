@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
+import 'package:intl/intl.dart';
 
 
 class TransactionForm extends StatefulWidget {
 
-  final void Function (String, double) onSubmit;
+  final void Function (String, double, DateTime) onSubmit;
 
 
   TransactionForm(this.onSubmit);
@@ -14,20 +14,37 @@ class TransactionForm extends StatefulWidget {
 }
 
 class _TransactionFormState extends State<TransactionForm> {
-  final titleController = TextEditingController();
-
-  final valueController = TextEditingController();
+  final _titleController = TextEditingController();
+  final _valueController = TextEditingController();
+  var _selectedDate = DateTime.now();
 
   _subimitForm(){
-    final title = titleController.text;
-    final value = double.tryParse(valueController.text) ?? 0.0;
+    final title = _titleController.text;
+    final value = double.tryParse(_valueController.text) ?? 0.0;
     
-    if(title.isEmpty || value == 0 ){
+    if(title.isEmpty || value == 0){
       return;
     }
 
-    widget.onSubmit(title, value);
+    widget.onSubmit(title, value, _selectedDate);
 
+  }
+
+  _showDatePicker() {
+    showDatePicker(
+      context: context, 
+      initialDate: DateTime.now(), 
+      firstDate: DateTime(2019), 
+      lastDate: DateTime.now(),
+      ).then((pickedDate){
+        if(pickedDate == null){
+          return;
+        }
+
+        setState(() {
+          _selectedDate = pickedDate;
+        });
+      });
   }
 
   @override
@@ -38,27 +55,62 @@ class _TransactionFormState extends State<TransactionForm> {
         padding: const EdgeInsets.all(10),
         child: Column(
           children: <Widget>[
-            TextField(
-              controller: titleController,
-              onSubmitted: (_) => _subimitForm(),
-              decoration: 
-                InputDecoration(
-                  labelText: 'Título',
-                ),
+            Card(
+              elevation: 5,
+              child: TextField(
+                controller: _titleController,
+                onSubmitted: (_) => _subimitForm(),
+                decoration: 
+                  InputDecoration(
+                    labelText: 'Título da Operação',
+                    contentPadding: EdgeInsets.all(5),
+                  ),
+              ),
             ),
-            TextField(
-              controller: valueController,
-              keyboardType: TextInputType.numberWithOptions(decimal: true),
-              onSubmitted: (_) => _subimitForm(),
-              decoration: 
-                InputDecoration(
-                  labelText: 'Valor (R\$)',
-                ),
+            Card(
+              elevation: 5,
+              child: TextField(
+                controller: _valueController,
+                keyboardType: TextInputType.numberWithOptions(decimal: true),
+                onSubmitted: (_) => _subimitForm(),
+                decoration: 
+                  InputDecoration(
+                    labelText: 'Valor (R\$)',
+                    contentPadding: EdgeInsets.all(5),
+                  ),
+              ),
             ),
-            FlatButton(
-              child: Text('Nova Transação'),
-              textColor: Colors.purple,
-              onPressed: _subimitForm(),
+            Container(
+              height: 70,
+              child: Row(
+                children: <Widget>[
+                  Expanded(
+                    child: Text(
+                      _selectedDate == null ? 'Nenhuma Data Selecionada!' : 'Data Selecionada ${DateFormat('dd/MM/y').format(_selectedDate)}'
+                      )
+                    ),
+                  ElevatedButton(
+                    //textColor: Theme.of(context).colorScheme,
+                    onPressed: _showDatePicker, 
+                    child: const Text(
+                      'Selecionar Data',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: <Widget>[
+                ElevatedButton(
+                  child: Text('Enviar'),
+                  //textColor: Colors.purple,
+                  onPressed: _subimitForm,
+                ),
+              ],
             ),
           ],
         ),
