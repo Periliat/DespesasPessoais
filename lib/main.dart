@@ -1,10 +1,11 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, sort_child_properties_last
 
 import 'dart:math';
+import 'package:despesas_pessoais/components/chart.dart';
 import 'package:flutter/material.dart';
+import 'models/transacoes.dart';
 import './components/transactions_form.dart';
 import './components/transaction_list.dart';
-import 'models/transacoes.dart';
   
 main() => runApp(ExpensesApp());
   
@@ -18,7 +19,7 @@ class ExpensesApp extends StatelessWidget {
       theme: tema.copyWith(
         colorScheme: tema.colorScheme.copyWith(
           primary: Colors.purple,
-          secondary: Colors.amber,
+          secondary: Colors.purple,
         ),
         textTheme: tema.textTheme.copyWith(
           headline6: TextStyle(
@@ -46,27 +47,21 @@ class MyHomePage extends StatefulWidget {
 }
   
 class _MyHomePageState extends State<MyHomePage> {
-  final List<Transactions> _transactions = [
-  //   Transactions(
-  //     id: 't1',
-  //     title: 'Novo Tênis de Corrida',
-  //     value: 310.76,
-  //     date: DateTime.now(),
-  //   ),
-  //   Transactions(
-  //     id: 't2',
-  //     title: 'Conta de Luz',
-  //     value: 211.30,
-  //     date: DateTime.now(),
-  //   ),
-  ];
-  
-  _addTransaction(String title, double value) {
+  final List<Transactions> _transactions = [];
+
+  List<Transactions> get _recentTransactions {
+    return _transactions.where((tr) {
+      return tr.date.isAfter(DateTime.now().subtract(Duration(days: 7)));
+    }).toList();
+  }
+
+
+  _addTransaction(String title, double value, DateTime date) {
     final newTransaction = Transactions(
       id: Random().nextDouble().toString(),
       title: title,
       value: value,
-      date: DateTime.now(),
+      date: date,
     );
   
     setState(() {
@@ -83,6 +78,12 @@ class _MyHomePageState extends State<MyHomePage> {
         return TransactionForm(_addTransaction);
       },
     );
+  }
+
+  _deleteTransaction(String id){
+    setState(() {
+      _transactions.removeWhere( (tr) => tr.id == id);
+    });
   }
   
   @override
@@ -101,15 +102,8 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            Container(
-              width: double.infinity,
-              child: Card(
-                color: Colors.blue,
-                child: Text('Gráfico'),
-                elevation: 5,
-              ),
-            ),
-            TransactionsList(_transactions),
+            Chart(_recentTransactions),
+            TransactionsList(_transactions, _deleteTransaction),
           ],
         ),
       ),
