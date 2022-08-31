@@ -61,7 +61,7 @@ class _TransactionFormState extends State<TransactionForm> {
                 controller: _titleController,
                 onSubmitted: (_) => _subimitForm(),
                 decoration: 
-                  InputDecoration(
+                  const InputDecoration(
                     labelText: 'Título da Operação',
                     contentPadding: EdgeInsets.all(5),
                   ),
@@ -71,16 +71,16 @@ class _TransactionFormState extends State<TransactionForm> {
               elevation: 5,
               child: TextField(
                 controller: _valueController,
-                keyboardType: TextInputType.numberWithOptions(decimal: true),
+                keyboardType: const TextInputType.numberWithOptions(decimal: true),
                 onSubmitted: (_) => _subimitForm(),
                 decoration: 
-                  InputDecoration(
+                  const InputDecoration(
                     labelText: 'Valor (R\$)',
                     contentPadding: EdgeInsets.all(5),
                   ),
               ),
             ),
-            Container(
+            SizedBox(
               height: 70,
               child: Row(
                 children: <Widget>[
@@ -106,7 +106,7 @@ class _TransactionFormState extends State<TransactionForm> {
               mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
                 ElevatedButton(
-                  child: Text('Enviar'),
+                  child: const Text('Enviar'),
                   //textColor: Colors.purple,
                   onPressed: _subimitForm,
                 ),

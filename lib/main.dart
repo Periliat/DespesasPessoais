@@ -1,5 +1,3 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, sort_child_properties_last
-
 import 'dart:math';
 import 'package:despesas_pessoais/components/chart.dart';
 import 'package:flutter/material.dart';
@@ -7,29 +5,31 @@ import 'models/transacoes.dart';
 import './components/transactions_form.dart';
 import './components/transaction_list.dart';
   
-main() => runApp(ExpensesApp());
+main() => runApp(const ExpensesApp());
   
 class ExpensesApp extends StatelessWidget {
+  const ExpensesApp({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     final ThemeData tema = ThemeData();
   
     return MaterialApp(
-      home: MyHomePage(),
+      home: const MyHomePage(),
       theme: tema.copyWith(
         colorScheme: tema.colorScheme.copyWith(
           primary: Colors.purple,
           secondary: Colors.purple,
         ),
         textTheme: tema.textTheme.copyWith(
-          headline6: TextStyle(
+          headline6: const TextStyle(
             fontFamily: 'OpenSans',
             fontSize: 18,
             fontWeight: FontWeight.bold,
             color: Colors.black,
           ),
         ),
-        appBarTheme: AppBarTheme(
+        appBarTheme: const AppBarTheme(
           titleTextStyle: TextStyle(
             fontFamily: 'OpenSans',
             fontSize: 20,
@@ -42,6 +42,8 @@ class ExpensesApp extends StatelessWidget {
 }
   
 class MyHomePage extends StatefulWidget {
+  const MyHomePage({Key? key}) : super(key: key);
+
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
@@ -51,7 +53,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   List<Transactions> get _recentTransactions {
     return _transactions.where((tr) {
-      return tr.date.isAfter(DateTime.now().subtract(Duration(days: 7)));
+      return tr.date.isAfter(DateTime.now().subtract(const Duration(days: 7)));
     }).toList();
   }
 
@@ -90,10 +92,10 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Despesas Pessoais'),
+        title: const Text('Despesas Pessoais'),
         actions: <Widget>[
           IconButton(
-            icon: Icon(Icons.add),
+            icon: const Icon(Icons.add),
             onPressed: () => _openTransactionFormModal(context),
           ),
         ],
@@ -108,7 +110,7 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
+        child: const Icon(Icons.add),
         onPressed: () => _openTransactionFormModal(context),
       ),
     );
